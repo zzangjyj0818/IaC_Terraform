@@ -34,7 +34,25 @@
 # terraform [global options] destory [options]
 # 테라폼 구성에서 관리하는 모든 개체를 제거하는 명령어
 
+# terraform destroy -auto-approve
+# 기존 명령어들은 사전 실행 계획이 없으면 실행 계획을 작성하고 사용자에게 승인을 요청
+# 그러나, 위 명령어는 승인 동작을 생략하여 실행함
+
+# terraform fmt [options] [DIR]
+# 테라폼 구성 파일을 표준 형식과 표준 스타일로 적용하는데 사용
+# 주로 구성 파일에 작성된 테라폼 코드의 가독성을 높이는 작업에 사용
+
+terraform {
+  backend "local" {
+    path = "state/terraform.tfstate"
+  }
+}
 resource "local_file" "abc" {
-  content  = "abc!"
-  filename = "${path.module}/abc.txt"
+    content = "abc!"
+    filename = "${path.module}/abc.txt"
+}
+
+resource "local_file" "def" {
+  content = "456!"
+  filename = "${path.module}/def.txt"
 }
