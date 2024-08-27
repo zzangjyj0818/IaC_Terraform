@@ -31,7 +31,10 @@
 # 테라폼은 선언적 구성 관리를 제공하는 언어로 멱등성을 가짐
 # 추가로 설명될 상태를 관리하기 때문에 동일한 구성에 대해서는 다시 실행하거나 변경하는 작업을 수행하지 않음
 
+# terraform [global options] destory [options]
+# 테라폼 구성에서 관리하는 모든 개체를 제거하는 명령어
+
 resource "local_file" "abc" {
-    content = "abc!"
-    filename = "${path.module}/abc.txt"
+  content  = "abc!"
+  filename = "${path.module}/abc.txt"
 }
