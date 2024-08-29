@@ -43,11 +43,13 @@
 # 주로 구성 파일에 작성된 테라폼 코드의 가독성을 높이는 작업에 사용
 
 resource "local_file" "abc" {
-  content = "lifecycle - step 3"
+  content = "lifecycle - step 5"
   filename = "${path.module}/abc.txt"
 
   lifecycle {
-    prevent_destroy = true
+    ignore_changes = [ 
+      content
+     ]
   }
 }
 
