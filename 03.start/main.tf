@@ -43,14 +43,12 @@
 # 주로 구성 파일에 작성된 테라폼 코드의 가독성을 높이는 작업에 사용
 
 resource "local_file" "abc" {
-  content = "123!"
+  content = "lifecycle - step 2"
   filename = "${path.module}/abc.txt"
-}
 
-resource "local_file" "def" {
-  depends_on = [ local_file.abc ]
-  content = "456!"
-  filename = "${path.module}/def.txt"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # 생명주기
