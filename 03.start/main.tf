@@ -42,19 +42,18 @@
 # 테라폼 구성 파일을 표준 형식과 표준 스타일로 적용하는데 사용
 # 주로 구성 파일에 작성된 테라폼 코드의 가독성을 높이는 작업에 사용
 
-variable "filename" {
-  default = "step0.text"
+resource "local_file" "abc" {
+  content = "123!"
+  filename = "${path.module}/abc.txt"
 }
-resource "local_file" "step6" {
-  content = "lifecycle - step 6"
-  filename = "${path.module}/${var.filename}"
 
-  lifecycle {
-    precondition {
-      condition = var.filename == "step6.txt"
-      error_message = "filename is not \"step6.txt\""
-    }
-  }
+data "local_file" "abc" {
+  filename = local_file.abc.filename
+}
+
+resource "local_file" "def" {
+  content = data.local_file.abc.content
+  filename = "${path.module}/def.txt"
 }
 
 # 생명주기
