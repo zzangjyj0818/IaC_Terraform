@@ -52,3 +52,10 @@ resource "local_file" "def" {
   content = "456!"
   filename = "${path.module}/def.txt"
 }
+
+# 생명주기
+# 1. create_before_destroy(bool) : 리소스 수정 시, 신규 리소스를 우선 생성하고 기존 리소스 삭제
+# 2. prevent_destroy(bool) : 해당 리소스를 삭제하려 할 때, 명시적으로 거부
+# 3. ignore_changes(list) : 리소스 요소에 선언된 인수의 변경 사항을 테라폼 실행 시 무시
+# 4. precondition : 리소스 요소에 선언된 인수의 조건을 검증
+# 5. postcondition : Plan과 Apply 이후의 결과를 속성 값으로 검증
