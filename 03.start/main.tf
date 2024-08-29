@@ -42,17 +42,13 @@
 # 테라폼 구성 파일을 표준 형식과 표준 스타일로 적용하는데 사용
 # 주로 구성 파일에 작성된 테라폼 코드의 가독성을 높이는 작업에 사용
 
-terraform {
-  backend "local" {
-    path = "state/terraform.tfstate"
-  }
-}
 resource "local_file" "abc" {
-    content = "abc!"
-    filename = "${path.module}/abc.txt"
+  content = "123!"
+  filename = "${path.module}/abc.txt"
 }
 
 resource "local_file" "def" {
+  depends_on = [ local_file.abc ]
   content = "456!"
   filename = "${path.module}/def.txt"
 }
