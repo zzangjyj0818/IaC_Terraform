@@ -75,21 +75,14 @@
 
 # count로 생성되는 리소스의 경우, <리소스 타입>.<이름>[<인덱스 번호>]
 # 모듈의 경우 module.<모듈 이름>[<인덱스 번호>]
-variable "names" {
-  type = list(string)
-  default = [ "a", "c" ]
-}
+
+# for_each
+# 리소스 또는 모듈 블록에서 for_each에 입력된 데이터 형태가 map 또는 set이면
+# 선언된 key 값 개수만큼 리소스를 생성
 
 resource "local_file" "abc" {
-  count = length(var.names)
+  for_each = toset(["a", "b", "c"])
   content = "abc"
   # 변수 인덱스에 직접 접근
-  filename = "${path.module}/abc-${var.names[count.index]}.txt"
-}
-
-resource "local_file" "def" {
-    count = length(var.names)
-    content = local_file.abc[count.index].content
-    # element func 사용
-    filename = "${path.module}/def-${element(var.names, count.index)}.txt"
+  filename = "${path.module}/abc-${each.key}.txt"
 }
