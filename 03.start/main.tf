@@ -66,15 +66,28 @@
 # depends_on : value에 담길 값이 특정 구성에 종속성이 있는 경우 생성되는 순서를 임의로 조정
 # precondition : 출력 전에 지정된 조건을 검증
 
+# 반복문
+# list 형태의 값 목록이나 key-value 형태의 문자열 집합인 데이터가 있는 경우, 동일한 내용에 대해 테라폼 구성 정의를 반복적으로 하지 않고 관리 가능
+
+# count
+# 리소스 또는 모듈 블록에 count 값이 정수인 인수가 포함된 경우, 선언된 정수 값만큼 리소스나 모듈을 생성
+# count에서 생성되는 참조값은 count.index이며, 반복하는 경우 0부터 1씩 증가해 인덱스 부여
+
+variable "names" {
+  type = list(string)
+  default = [ "a", "b", "c" ]
+}
+
 resource "local_file" "abc" {
-  content = "abc123"
-  filename = "${path.module}/abc.txt"
+  count = length(var.names)
+  content = "abc"
+  # 변수 인덱스에 직접 접근
+  filename = "${path.module}/abc-${var.names[count.index]}.txt"
 }
 
-output "file_id" {
-  value = local_file.abc.id
-}
-
-output "file_abspath" {
-  value = abspath(local_file.abc.filename)
+resource "local_file" "def" {
+    count = length(var.names)
+    content = local_file.abc[count.index].content
+    # element func 사용
+    filename = "${path.module}/def-${element(var.names, count.index)}.txt"
 }
