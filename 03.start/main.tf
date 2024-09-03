@@ -42,22 +42,39 @@
 # 테라폼 구성 파일을 표준 형식과 표준 스타일로 적용하는데 사용
 # 주로 구성 파일에 작성된 테라폼 코드의 가독성을 높이는 작업에 사용
 
-variable "prefix" {
-  default = "hello"
-}
-
-locals {
-  name = "terraform"
-}
-
-resource "local_file" "abc" {
-  content = local.name
-  filename = "${path.module}/abc.txt"
-}
-
 # 생명주기
 # 1. create_before_destroy(bool) : 리소스 수정 시, 신규 리소스를 우선 생성하고 기존 리소스 삭제
 # 2. prevent_destroy(bool) : 해당 리소스를 삭제하려 할 때, 명시적으로 거부
 # 3. ignore_changes(list) : 리소스 요소에 선언된 인수의 변경 사항을 테라폼 실행 시 무시
 # 4. precondition : 리소스 요소에 선언된 인수의 조건을 검증
 # 5. postcondition : Plan과 Apply 이후의 결과를 속성 값으로 검증
+
+# local (지역변수)
+# 로컬에 선언되는 블록은 locals로 시작
+# 선언되는 인수에 표현되는 값은 상수만이 아닌 리소스의 속성, 변수들의 값들도 조합해 정의할 수 있음
+# local.<name>으로 참조할 수 있음
+
+# 출력(output)
+# 출력 값은 주로 테라폼 코드의 프로비저닝 수행 후의 결과 속성 값을 확인하는 용도로 사용
+# 1. 루트 모듈에서 사용자가 확인하고자 하는 특정 속성 출력
+# 2. 자식 모듈의 특정 값을 정의하고 루트 모듈에서 결과를 참조
+# 3. 서로 달느 루트 모듈의 결괄르 원격으로 읽기 위한 접근 요소
+# 리소스 생성 후, 결정되는 속성 값은 프로비저닝이 완료되어야 최종적으로 확인할수 있고, plan 단계에서는 적용될 값을 출력하지 않음
+
+# description : 출력 값 설명
+# sensitive : 민감한 출력 값임을 알리고 테라폼의 출력문에서 값 노출을 제한
+# depends_on : value에 담길 값이 특정 구성에 종속성이 있는 경우 생성되는 순서를 임의로 조정
+# precondition : 출력 전에 지정된 조건을 검증
+
+resource "local_file" "abc" {
+  content = "abc123"
+  filename = "${path.module}/abc.txt"
+}
+
+output "file_id" {
+  value = local_file.abc.id
+}
+
+output "file_abspath" {
+  value = abspath(local_file.abc.filename)
+}
