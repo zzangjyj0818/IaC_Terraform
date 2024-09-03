@@ -80,9 +80,23 @@
 # 리소스 또는 모듈 블록에서 for_each에 입력된 데이터 형태가 map 또는 set이면
 # 선언된 key 값 개수만큼 리소스를 생성
 
-resource "local_file" "abc" {
-  for_each = toset(["a", "b", "c"])
-  content = "abc"
-  # 변수 인덱스에 직접 접근
-  filename = "${path.module}/abc-${each.key}.txt"
+variable "names" {
+  default = {
+    a = "hello a"
+    b = "hello b"
+    c = "hello c"
+  }
+}
+
+data "archive_file" "dotfiles" {
+  type = "zip"
+  output_path = "${path.module}/dotfiles.zip"
+
+  dynamic "source" {
+    for_each = var.names
+    content {
+      content = source.value
+      filename = "${path.module}/${source.key}.txt"
+    }
+  }
 }
