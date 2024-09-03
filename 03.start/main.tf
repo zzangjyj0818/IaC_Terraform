@@ -73,9 +73,11 @@
 # 리소스 또는 모듈 블록에 count 값이 정수인 인수가 포함된 경우, 선언된 정수 값만큼 리소스나 모듈을 생성
 # count에서 생성되는 참조값은 count.index이며, 반복하는 경우 0부터 1씩 증가해 인덱스 부여
 
+# count로 생성되는 리소스의 경우, <리소스 타입>.<이름>[<인덱스 번호>]
+# 모듈의 경우 module.<모듈 이름>[<인덱스 번호>]
 variable "names" {
   type = list(string)
-  default = [ "a", "b", "c" ]
+  default = [ "a", "c" ]
 }
 
 resource "local_file" "abc" {
